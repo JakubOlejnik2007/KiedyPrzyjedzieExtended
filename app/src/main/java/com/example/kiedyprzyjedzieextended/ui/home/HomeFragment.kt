@@ -10,11 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kiedyprzyjedzieextended.databinding.FragmentDashboardBinding
+import com.example.kiedyprzyjedzieextended.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,11 +22,11 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        val dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val textView: TextView = binding.textHome
+        val dashboardViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
@@ -40,9 +40,9 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    class DashboardViewModel : ViewModel() {
+    class HomeViewModel : ViewModel() {
         private val _text = MutableLiveData<String>().apply {
-            value = "This is homeFragment"
+            value = "This is dashboard Fragment"
         }
         val text: LiveData<String> = _text
     }

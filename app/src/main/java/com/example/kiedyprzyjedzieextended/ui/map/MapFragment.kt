@@ -1,4 +1,4 @@
-package com.example.kiedyprzyjedzieextended.ui.notifications
+package com.example.kiedyprzyjedzieextended.ui.map
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kiedyprzyjedzieextended.databinding.FragmentDashboardBinding
+import com.example.kiedyprzyjedzieextended.databinding.FragmentMapBinding
 
-class NotificationsFragment : Fragment() {
+class MapFragment : Fragment() {
 
-    private var _binding: FragmentDashboardBinding? = null
+    private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -22,11 +22,11 @@ class NotificationsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        val dashboardViewModel = ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val dashboardViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
 
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
@@ -40,9 +40,9 @@ class NotificationsFragment : Fragment() {
         _binding = null
     }
 
-    class DashboardViewModel : ViewModel() {
+    class MapViewModel : ViewModel() {
         private val _text = MutableLiveData<String>().apply {
-            value = "This is notifications Fragment"
+            value = "This is dashboard Fragment"
         }
         val text: LiveData<String> = _text
     }
