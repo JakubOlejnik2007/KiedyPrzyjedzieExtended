@@ -38,7 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="15dp"
+        android:padding="5dp"
         android:gravity="center"
         android:background="?attr/colorPrimaryVariant"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -50,7 +50,7 @@
         android:text="Kiedy przyjedzie?\nEXTRA"
         android:textAlignment="center"
         android:textSize="32sp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:fontFamily="@font/robotobold"
         android:textColor="@color/lynx_white"/>
 
