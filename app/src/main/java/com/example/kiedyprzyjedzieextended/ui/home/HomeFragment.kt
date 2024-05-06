@@ -1,6 +1,7 @@
 package com.example.kiedyprzyjedzieextended.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kiedyprzyjedzieextended.databinding.FragmentHomeBinding
+import com.example.kiedyprzyjedzieextended.helpers.fetchJSONData
 
 class HomeFragment : Fragment() {
 
@@ -31,6 +33,14 @@ class HomeFragment : Fragment() {
         dashboardViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
+
+        val data = fetchJSONData()
+        data.observe(viewLifecycleOwner) { result ->
+            Log.d("fetch JSON", result)
+        }
+        /*TODO w aplikacji należy dodać adapter dla przystanków
+        * */
+
 
         return root
     }
