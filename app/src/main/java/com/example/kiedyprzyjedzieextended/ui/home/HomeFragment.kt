@@ -11,8 +11,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kiedyprzyjedzieextended.StopsAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentHomeBinding
+import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
 import com.example.kiedyprzyjedzieextended.helpers.fetchJSONData
+import com.example.kiedyprzyjedzieextended.helpers.getJsonFromUrl
 
 class HomeFragment : Fragment() {
 
@@ -34,10 +38,7 @@ class HomeFragment : Fragment() {
             textView.text = it
         }
 
-        val data = fetchJSONData()
-        data.observe(viewLifecycleOwner) { result ->
-            Log.d("fetch JSON", result)
-        }
+        getAndShowStops()
         /*TODO w aplikacji należy dodać adapter dla przystanków
         * */
 
@@ -49,6 +50,19 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    fun getAndShowStops() {
+        val data = fetchJSONData()
+        data.observe(viewLifecycleOwner) { result ->
+            val resArray = convertJsonToStopArray(result)
+            Log.d("fetch JSON", resArray[264].toString())
+            val adapter: StopsAdapter = StopsAdapter(resArray.toList())
+            binding.stopsList.adapter = adapter
+            binding.stopsList.layoutManager = LinearLayoutManager(requireContext())
+
+        }
+    }
+
 
     class HomeViewModel : ViewModel() {
         private val _text = MutableLiveData<String>().apply {

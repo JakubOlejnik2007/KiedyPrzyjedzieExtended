@@ -33,11 +33,10 @@ fun convertJsonToStopArray(jsonString: String): Array<Stop> {
 fun fetchJSONData(): LiveData<String> {
     val result = MutableLiveData<String>()
 
-    // Uruchomienie korutyny w tle
     CoroutineScope(Dispatchers.IO).launch {
         try {
             val response = getJsonFromUrl("https://radzymin.kiedyprzyjedzie.pl/stops")
-            result.postValue(response.toString())
+            result.postValue(response)
         } catch (e: Exception) {
             result.postValue("Error: ${e.message}")
         }
@@ -47,8 +46,9 @@ fun fetchJSONData(): LiveData<String> {
 }
 
 
-fun getJsonFromUrl(url: String): Result<String, Exception> {
-    Log.d("fetch JSON", url.httpGet().responseString().toString())
+fun getJsonFromUrl(url: String): String {
     val (_, _, result) = url.httpGet().responseString()
-    return result
+
+    Log.d("fetch JSON getJsonFromUrl", result.component1() ?: result.component2()?.message ?: "")
+    return result.component1() ?: result.component2()?.message ?: ""
 }
