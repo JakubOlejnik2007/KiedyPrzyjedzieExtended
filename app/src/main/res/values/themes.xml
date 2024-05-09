@@ -6,9 +6,9 @@
         <item name="colorPrimaryVariant">@color/pico_void</item>
         <item name="colorOnPrimary">@color/lynx_white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/nasturcian_flower</item>
-        <item name="colorSecondaryVariant">@color/harley_davidson_orange</item>
-        <item name="colorOnSecondary">@color/lynx_white</item>
+        <item name="colorSecondary">@color/protoss_pylon</item>
+        <item name="colorSecondaryVariant">@color/vanadyl_blue</item>
+        <item name="colorOnSecondary">@color/chaing_gang_greye</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
