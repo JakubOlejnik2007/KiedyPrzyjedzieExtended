@@ -73,7 +73,7 @@ class HomeFragment : Fragment() {
                     val stop = stops.find{ it.stopNumber == view.findViewById<TextView>(R.id.stopId).text.toString().toInt()}
                     val intent = Intent(context, BusStopActivity::class.java)
                     val json = Gson().toJson(stop)
-                    //intent.putExtra("stopJSON", json)
+                    intent.putExtra("stopJSON", json)
                     startActivity(intent)
                     Log.d("stop", stop.toString())
                 }

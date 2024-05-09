@@ -3,7 +3,60 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryVariant">
+
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical"
+        android:padding="10dp"
+        >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="start">
+            <Button
+                android:id="@+id/close"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:background="@drawable/close_white" />
+            <TextView
+                android:id="@+id/stopName"
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginStart="8dp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/busstop1" />
+            <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+            <TextView
+                android:id="@+id/stopNumber"
+                android:textSize="22sp"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
@@ -13,9 +66,11 @@
         app:tabIndicatorGravity="stretch"
         app:tabIndicatorAnimationMode="elastic"
         app:tabSelectedTextColor="?attr/colorOnPrimary"
+        android:background="@color/mazarine_blue"
+        app:tabTextColor="?attr/colorOnPrimary"
         app:tabIndicatorColor="@null"
         app:tabIndicator="@drawable/tab_indicator"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         />
@@ -26,29 +81,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tab_layout"/>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_stop_menu" />
-
-    <fragment
-        android:id="@+id/nav_host_fragment_activity_bus_stop"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_bus_stop_activity" />
+        app:layout_constraintTop_toBottomOf="@id/tab_layout"
+        android:background="?attr/colorOnPrimary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

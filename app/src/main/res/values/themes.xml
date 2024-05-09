@@ -2,15 +2,19 @@
     <!-- Base application theme. -->
     <style name="Theme.KiedyPrzyjedzieExtended" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/hint_of_pensive</item>
+        <item name="color">@color/lynx_white</item>
+        <item name="colorPrimary">@color/lynx_white</item>
         <item name="colorPrimaryVariant">@color/pico_void</item>
         <item name="colorOnPrimary">@color/lynx_white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/protoss_pylon</item>
         <item name="colorSecondaryVariant">@color/vanadyl_blue</item>
-        <item name="colorOnSecondary">@color/chaing_gang_greye</item>
+        <item name="colorOnSecondary">@color/lynx_white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:fontFamily">@font/robotobold</item>
         <!-- Customize your theme here. -->
+        <item name="android:textColorHint">@color/electromagnetic</item>
+        <item name="android:editTextColor">@color/electromagnetic</item>
     </style>
 </resources>

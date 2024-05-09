@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <SearchView
             android:id="@+id/stopsSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:queryHint="Wyszukaj przystanek"
-            android:iconifiedByDefault = "false"
             android:fontFamily="@font/robotothin"
-            />
+            android:iconifiedByDefault="false"
+            android:queryHint="Wyszukaj przystanek"/>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stopsList"
             android:layout_width="match_parent"
