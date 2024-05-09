@@ -3,6 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_map">Mapa</string>
     <string name="title_activity_bus_stop">BusStopActivity</string>
-    <string name="title_timetable">Dashboard</string>
-    <string name="title_departures">Notifications</string>
+    <string name="title_timetable">Timetable</string>
+    <string name="title_departures">Departures</string>
 </resources>
