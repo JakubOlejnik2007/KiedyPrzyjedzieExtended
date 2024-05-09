@@ -1,5 +1,6 @@
 package com.example.kiedyprzyjedzieextended.ui.home
 
+import android.content.Intent
 import com.example.kiedyprzyjedzieextended.R
 import android.os.Bundle
 import android.util.Log
@@ -10,12 +11,14 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kiedyprzyjedzieextended.BusStopActivity
 import com.example.kiedyprzyjedzieextended.adapters.RecyclerViewClickListener
 import com.example.kiedyprzyjedzieextended.adapters.StopsAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentHomeBinding
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
 import com.example.kiedyprzyjedzieextended.helpers.fetchJSONData
 import com.example.kiedyprzyjedzieextended.types.Stop
+import com.google.gson.Gson
 
 class HomeFragment : Fragment() {
 
@@ -68,7 +71,10 @@ class HomeFragment : Fragment() {
             val recyclerViewClickListener = object : RecyclerViewClickListener {
                 override fun onClick(view: View, position: Int) {
                     val stop = stops.find{ it.stopNumber == view.findViewById<TextView>(R.id.stopId).text.toString().toInt()}
-
+                    val intent = Intent(context, BusStopActivity::class.java)
+                    val json = Gson().toJson(stop)
+                    //intent.putExtra("stopJSON", json)
+                    startActivity(intent)
                     Log.d("stop", stop.toString())
                 }
             }
