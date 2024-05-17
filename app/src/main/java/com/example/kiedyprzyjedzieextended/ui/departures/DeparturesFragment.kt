@@ -1,6 +1,7 @@
 package com.example.kiedyprzyjedzieextended.ui.departures
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kiedyprzyjedzieextended.databinding.FragmentDeparturesBinding
+import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
+import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
+import com.example.kiedyprzyjedzieextended.helpers.fetchStopsJSONData
 
 class DeparturesFragment : Fragment() {
 
@@ -32,7 +36,14 @@ class DeparturesFragment : Fragment() {
             textView.text = it
         }
 
+        getDeparturesObject()
+
         return root
+    }
+
+    private fun getDeparturesObject() {
+        val data = fetchDeparturesJSONData()
+        Log.d("departures", data.toString())
     }
 
     override fun onDestroyView() {

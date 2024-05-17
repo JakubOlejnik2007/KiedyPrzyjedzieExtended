@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.kiedyprzyjedzieextended.types.Stop
 import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.Result
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+
 fun convertJsonToStopArray(jsonString: String): Array<Stop> {
     val jsonObject = Gson().fromJson(jsonString, JsonObject::class.java)
     val jsonArray = jsonObject.getAsJsonArray("stops")
@@ -30,7 +29,7 @@ fun convertJsonToStopArray(jsonString: String): Array<Stop> {
 }
 
 
-fun fetchJSONData(): LiveData<String> {
+fun fetchStopsJSONData(): LiveData<String> {
     val result = MutableLiveData<String>()
 
     CoroutineScope(Dispatchers.IO).launch {
@@ -43,12 +42,4 @@ fun fetchJSONData(): LiveData<String> {
     }
 
     return result
-}
-
-
-fun getJsonFromUrl(url: String): String {
-    val (_, _, result) = url.httpGet().responseString()
-
-    Log.d("fetch JSON getJsonFromUrl", result.component1() ?: result.component2()?.message ?: "")
-    return result.component1() ?: result.component2()?.message ?: ""
 }

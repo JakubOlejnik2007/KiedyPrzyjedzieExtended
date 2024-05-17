@@ -16,7 +16,7 @@ import com.example.kiedyprzyjedzieextended.adapters.RecyclerViewClickListener
 import com.example.kiedyprzyjedzieextended.adapters.StopsAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentHomeBinding
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
-import com.example.kiedyprzyjedzieextended.helpers.fetchJSONData
+import com.example.kiedyprzyjedzieextended.helpers.fetchStopsJSONData
 import com.example.kiedyprzyjedzieextended.types.Stop
 import com.google.gson.Gson
 
@@ -58,7 +58,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getStopsList() {
-        val data = fetchJSONData()
+        val data = fetchStopsJSONData()
         data.observe(viewLifecycleOwner) { result ->
             val resArray = convertJsonToStopArray(result)
             stopsList = resArray.toList()
