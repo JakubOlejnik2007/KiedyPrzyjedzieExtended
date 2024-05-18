@@ -8,10 +8,12 @@ import com.example.kiedyprzyjedzieextended.types.Stop
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.google.gson.Gson
+import com.google.gson.JsonNull
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-fun convertJsonToDeparturesArray(jsonString: String): Departures {
+fun convertJsonToDeparturesObject(jsonString: String): Departures {
+    Log.d("json", jsonString)
     val jsonObject = Gson().fromJson(jsonString, JsonObject::class.java)
 
     val timestamp = jsonObject["timestamp"].asInt
@@ -33,7 +35,10 @@ fun convertJsonToDeparturesArray(jsonString: String): Departures {
             departureObject["is_estimated"].asBoolean,
             departureObject["direction_id"].asInt,
             departureObject["platform"].asString,
-            departureObject["deviation_id"]?.asString,
+            if (departureObject["deviation_id"] != null && departureObject["deviation_id"] !is JsonNull)
+                departureObject["deviation_id"].asString
+            else
+                null,
             departureObject["line_name"].asString,
             departureObject["show_line_name"].asBoolean,
             departureObject["vehicle_type"].asInt,

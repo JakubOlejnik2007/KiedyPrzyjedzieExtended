@@ -1,5 +1,6 @@
 package com.example.kiedyprzyjedzieextended.ui.departures
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,13 +12,23 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.kiedyprzyjedzieextended.BusStopActivity
+import com.example.kiedyprzyjedzieextended.R
+import com.example.kiedyprzyjedzieextended.adapters.DeparturesAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentDeparturesBinding
+import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDeparturesObject
 import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
+import com.example.kiedyprzyjedzieextended.interfaces.RecyclerClickListener
+import com.example.kiedyprzyjedzieextended.types.Departures
+import com.google.gson.Gson
 
 class DeparturesFragment : Fragment() {
 
     private var _binding: FragmentDeparturesBinding? = null
     private val binding get() = _binding!!
+
+    lateinit var departures: Departures
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,12 +38,8 @@ class DeparturesFragment : Fragment() {
         _binding = FragmentDeparturesBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDepartures
-        val dashboardViewModel = ViewModelProvider(this).get(MapViewModel::class.java)
+        binding.departuresList.layoutManager = LinearLayoutManager(context)
 
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
 
         getDeparturesObject()
 
@@ -41,7 +48,20 @@ class DeparturesFragment : Fragment() {
 
     private fun getDeparturesObject() {
         val data = fetchDeparturesJSONData()
-        Log.d("departures", data.toString())
+        data.observe(viewLifecycleOwner) {
+            result ->
+            Log.d("departures", result.toString())
+            departures = convertJsonToDeparturesObject(result.toString())
+            Log.d("departures", departures.toString())
+
+            val recyclerViewClickListener = object : RecyclerClickListener {
+                override fun onClick(view: View, position: Int) {
+                }
+            }
+
+            Log.d("departures", (departures.rows.toList().toString()))
+            binding.departuresList.adapter = DeparturesAdapter(departures.rows.toList(), recyclerViewClickListener)
+        }
     }
 
     override fun onDestroyView() {
@@ -49,10 +69,4 @@ class DeparturesFragment : Fragment() {
         _binding = null
     }
 
-    class MapViewModel : ViewModel() {
-        private val _text = MutableLiveData<String>().apply {
-            value = "This is departures Fragment"
-        }
-        val text: LiveData<String> = _text
-    }
 }

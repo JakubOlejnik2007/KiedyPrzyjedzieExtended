@@ -1,5 +1,6 @@
 package com.example.kiedyprzyjedzieextended.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class DeparturesAdapter(private var dataSet: List<Departure>, private val clickL
     }
 
     override fun getItemCount(): Int {
+        Log.d("dataSetSize", dataSet.size.toString())
         return dataSet.size
     }
 
