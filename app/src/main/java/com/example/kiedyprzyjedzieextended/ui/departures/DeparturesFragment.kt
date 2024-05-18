@@ -12,9 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kiedyprzyjedzieextended.databinding.FragmentDeparturesBinding
-import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
 import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
-import com.example.kiedyprzyjedzieextended.helpers.fetchStopsJSONData
 
 class DeparturesFragment : Fragment() {
 

@@ -38,9 +38,10 @@ fun convertJsonToDeparturesArray(jsonString: String): Departures {
             departureObject["show_line_name"].asBoolean,
             departureObject["vehicle_type"].asInt,
             departureObject["vehicle_attributes"].asJsonArray.map { it.asString }.toTypedArray(),
-            departureObject["trip_id"].asString,
+            departureObject["trip_id"].asInt,
             departureObject["trip_execution_id"].asString,
-            departureObject["trip_index"].asInt
+            departureObject["trip_index"].asInt,
+            directions[departureObject["direction_id"].toString()] ?: ""
         )
     }.toTypedArray()
 

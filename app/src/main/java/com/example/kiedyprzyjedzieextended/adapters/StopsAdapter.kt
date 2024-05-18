@@ -8,9 +8,11 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.kiedyprzyjedzieextended.R
+import com.example.kiedyprzyjedzieextended.interfaces.RecyclerClickListener
 import com.example.kiedyprzyjedzieextended.types.Stop
 
-class StopsAdapter(private var dataSet: List<Stop>, private val clickListener: RecyclerViewClickListener) :
+
+class StopsAdapter(private var dataSet: List<Stop>, private val clickListener: RecyclerClickListener) :
     RecyclerView.Adapter<StopsAdapter.ViewHolder>(), Filterable {
 
     private var filteredStops: List<Stop> = dataSet
@@ -66,8 +68,4 @@ class StopsAdapter(private var dataSet: List<Stop>, private val clickListener: R
             }
         }
     }
-}
-
-interface RecyclerViewClickListener {
-    fun onClick(view: View, position: Int)
 }
