@@ -32,12 +32,13 @@ class DeparturesAdapter(private var dataSet: List<Departure>, private val clickL
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val departures = dataSet[position]
+        val departure = dataSet[position]
 
-        holder.lineNameTextView.text = departures.line_name
-        holder.direction.text = departures.direction
-        holder.arrivalTimeTextView.text = departures.time
-        holder.busIconImageView.setImageResource(R.drawable.small_bus)
+        holder.lineNameTextView.text = departure.line_name
+        holder.direction.text = departure.direction
+        holder.arrivalTimeTextView.text = departure.time ?: ">>>"
+        if(departure.time == null || departure.time == "< 1 min" || (!departure.time.contains(":") && departure.time.split(" ")[0].toInt() in 0..5)) holder.arrivalTimeTextView.setTextColor(0xFFFF0000.toInt())
+        holder.busIconImageView.setImageResource(if(departure.vehicle_type == 3) R.drawable.small_bus else R.drawable.big_bus)
 
         holder.itemView.setOnClickListener {
             clickListener.onClick(it, position)

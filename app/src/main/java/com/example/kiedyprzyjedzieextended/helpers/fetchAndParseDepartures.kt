@@ -27,9 +27,18 @@ fun convertJsonToDeparturesObject(jsonString: String): Departures {
     val rows = jsonObject["rows"].asJsonArray.map { departureJson ->
         val departureObject = departureJson.asJsonObject
         Departure(
-            departureObject["time"].asString,
-            departureObject["static_time"].asString,
-            departureObject["time_diff"].asInt,
+            if(departureObject["time"] != null && departureObject["time"] !is JsonNull)
+            departureObject["time"].asString
+            else
+                null,
+            if(departureObject["static_time"] != null && departureObject["static_time"] !is JsonNull)
+                departureObject["static_time"].asString
+            else
+                null,
+            if(departureObject["time_diff"] != null && departureObject["time_diff"] !is JsonNull)
+                departureObject["time_diff"].asInt
+            else
+                null,
             departureObject["at_stop"].asBoolean,
             departureObject["canceled"].asBoolean,
             departureObject["is_estimated"].asBoolean,
@@ -54,7 +63,7 @@ fun convertJsonToDeparturesObject(jsonString: String): Departures {
 }
 
 
-fun fetchDeparturesJSONData(stopId: String = "383723:82865"): LiveData<String> {
+fun fetchDeparturesJSONData(stopId: String = "266339:309579"): LiveData<String> {
     val result = MutableLiveData<String>()
 
     CoroutineScope(Dispatchers.IO).launch {

@@ -22,7 +22,7 @@ class BusStopActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBusStopBinding
     private lateinit var adapter: FragmentPageAdapter
-    private lateinit var stop: Stop
+    lateinit var stop: Stop
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

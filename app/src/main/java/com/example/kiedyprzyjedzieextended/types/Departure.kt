@@ -22,9 +22,9 @@ package com.example.kiedyprzyjedzieextended.types
  * @property trip_index An integer representing the index of the departure within the trip.
  */
 data class Departure(
-    val time: String,
-    val static_time: String,
-    val time_diff: Int,
+    val time: String?,
+    val static_time: String?,
+    val time_diff: Int?,
     val at_stop: Boolean,
     val canceled: Boolean,
     val is_estimated: Boolean,
