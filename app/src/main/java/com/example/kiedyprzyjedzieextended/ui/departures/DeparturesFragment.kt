@@ -55,7 +55,10 @@ class DeparturesFragment : Fragment() {
             Log.d("departures", result.toString())
             departures = convertJsonToDeparturesObject(result.toString())
             Log.d("departures", departures.toString())
-            if(departures.rows.size == 0) binding.emptyListMessage.text = "Brak odjazdów w ciągu najbliższych czterech godzin!"
+            if(departures.rows.size == 0){
+                binding.emptyListMessage.text = "Brak odjazdów w ciągu najbliższych czterech godzin!"
+                binding.nightImage.visibility = View.VISIBLE
+            }
             val recyclerViewClickListener = object : RecyclerClickListener {
                 override fun onClick(view: View, position: Int) {
                 }

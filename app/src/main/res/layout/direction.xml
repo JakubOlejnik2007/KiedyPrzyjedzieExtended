@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/direction"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp"
+    android:paddingHorizontal="20dp"
+    android:background="@drawable/rounded_background1"
+    android:backgroundTint="?attr/colorPrimaryVariant"
+    >
+    <TextView
+        android:id="@+id/lineName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        android:textColor="?attr/colorOnPrimary"
+        />
+    <TextView
+        android:id="@+id/directionName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="19sp"
+        android:layout_marginStart="10dp"
+        android:layout_gravity="center"
+        />
+</LinearLayout>

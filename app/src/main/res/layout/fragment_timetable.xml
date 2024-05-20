@@ -6,18 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".ui.timetable.TimetableFragment">
 
-    <TextView
-        android:id="@+id/text_timetable"
+    <LinearLayout
+        android:id="@+id/controlsTimetable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:text="timetable"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center">
+        <Button
+            android:id="@+id/dateDown"
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_margin="5dp"
+            android:text="L"
+            android:backgroundTint="@color/electromagnetic"
+            />
+        <TextView
+            android:id="@+id/date"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_margin="5dp"
+            android:textSize="26sp"
+            android:text="2024-05-20"
+
+            android:textColor="@color/electromagnetic"
+            android:backgroundTint="@color/electromagnetic"
+            />
+        <Button
+            android:id="@+id/dateUp"
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_margin="5dp"
+            android:text="R"
+            android:backgroundTint="@color/electromagnetic"
+            />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/directionsList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="#00000000"
+        android:scrollbars="horizontal"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/controlsTimetable"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/emptyListMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="36sp"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/directionsList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <ImageView
+        android:id="@+id/nightImage"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:padding="10dp"
+        android:textSize="36sp"
+        android:visibility="invisible"
+        android:src="@drawable/night_svgrepo_com"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/emptyListMessage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>
