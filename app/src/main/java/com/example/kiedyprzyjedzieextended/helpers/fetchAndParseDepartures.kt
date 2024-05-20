@@ -20,11 +20,13 @@ fun convertJsonToDeparturesObject(jsonString: String): Departures {
     val designator = jsonObject["designator"].asInt
     val stationName = jsonObject["station_name"].asString
     val onlyDisembarking = jsonObject["only_disembarking"].asBoolean
-    val directions = jsonObject["directions"].asJsonObject
-        .entrySet().associate { it.key to it.value.asString }
-    val deviations = jsonObject["deviations"].asJsonObject
-        .entrySet().associate { it.key to it.value.asString }
-    val rows = jsonObject["rows"].asJsonArray.map { departureJson ->
+    val directions = if(jsonObject["directions"] != null && jsonObject["directions"] !is JsonNull)
+        jsonObject["directions"].asJsonObject
+        .entrySet().associate { it.key to it.value.asString } else null
+    val deviations = if(jsonObject["deviations"] != null && jsonObject["deviations"] !is JsonNull)
+        jsonObject["deviations"].asJsonObject
+        .entrySet().associate { it.key to it.value.asString } else null
+    val rows = if(jsonObject["deviations"] != null && jsonObject["deviations"] !is JsonNull){ jsonObject["rows"].asJsonArray.map { departureJson ->
         val departureObject = departureJson.asJsonObject
         Departure(
             if(departureObject["time"] != null && departureObject["time"] !is JsonNull)
@@ -55,9 +57,9 @@ fun convertJsonToDeparturesObject(jsonString: String): Departures {
             departureObject["trip_id"].asInt,
             departureObject["trip_execution_id"].asString,
             departureObject["trip_index"].asInt,
-            directions[departureObject["direction_id"].toString()] ?: ""
+            directions?.get(departureObject["direction_id"].toString()) ?: ""
         )
-    }.toTypedArray()
+    }.toTypedArray()} else arrayOf()
 
     return Departures(timestamp, rows, directions, deviations, designator, stationName, onlyDisembarking)
 }
