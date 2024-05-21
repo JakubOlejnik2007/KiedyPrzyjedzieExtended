@@ -5,4 +5,9 @@
     <string name="title_activity_bus_stop">BusStopActivity</string>
     <string name="title_timetable">Timetable</string>
     <string name="title_departures">Departures</string>
+    <string name="no_departures_textview">Brak odjazdów w ciągu najbliższych czterech godzin!</string>
+    <string name="no_directions_text">Brak odjazdów z tego przystanku</string>
+    <string name="arrow_right_text">▶</string>
+    <string name="arrow_left_text">◀</string>
+    <string name="no_departures">No departures</string>
 </resources>

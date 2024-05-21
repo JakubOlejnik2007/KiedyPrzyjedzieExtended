@@ -44,8 +44,7 @@ class DeparturesAdapter(private var dataSet: List<Departure>, private val clickL
         holder.arrivalTimeTextView.text = departure.time ?: ">>>"
         if(departure.time == null || departure.time == "< 1 min" || (!departure.time.contains(":") && departure.time.split(" ")[0].toInt() in 0..5)) holder.arrivalTimeTextView.setTextColor(0xFFFF0000.toInt())
         holder.busIconImageView.setImageResource(if(departure.vehicle_type == 3) R.drawable.small_bus else R.drawable.big_bus)
-
-        holder.busDelayTextView.text = "${departure.time_diff} min"
+        holder.busDelayTextView.text = if(!departure.at_stop && departure.time_diff != 0) "${departure.time_diff ?: "0"} min" else ""
         if(departure.time_diff != null && departure.time_diff > 0) holder.busDelayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.harley_davidson_orange))
 
         holder.itemView.setOnClickListener {
@@ -54,7 +53,6 @@ class DeparturesAdapter(private var dataSet: List<Departure>, private val clickL
     }
 
     override fun getItemCount(): Int {
-        Log.d("dataSetSize", dataSet.size.toString())
         return dataSet.size
     }
 

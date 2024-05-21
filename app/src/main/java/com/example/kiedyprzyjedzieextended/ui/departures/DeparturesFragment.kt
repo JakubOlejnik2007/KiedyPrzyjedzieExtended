@@ -52,19 +52,19 @@ class DeparturesFragment : Fragment() {
         val data = fetchDeparturesJSONData(stopId)
         data.observe(viewLifecycleOwner) {
             result ->
-            Log.d("departures", result.toString())
             departures = convertJsonToDeparturesObject(result.toString())
-            Log.d("departures", departures.toString())
             if(departures.rows.size == 0){
-                binding.emptyListMessage.text = "Brak odjazdów w ciągu najbliższych czterech godzin!"
-                binding.nightImage.visibility = View.VISIBLE
+                binding.departuresList.visibility = View.INVISIBLE
+                binding.noDeparturesContainer.visibility = View.VISIBLE
+            } else {
+                binding.departuresList.visibility = View.VISIBLE
+                binding.noDeparturesContainer.visibility = View.INVISIBLE
             }
             val recyclerViewClickListener = object : RecyclerClickListener {
                 override fun onClick(view: View, position: Int) {
                 }
             }
             binding.timestamp.text = "Pobrane o godz: ${convertTimestampToTime(departures.timestamp.toLong())}"
-            Log.d("departures", (departures.rows.toList().toString()))
             binding.departuresList.adapter = DeparturesAdapter(departures.rows.toList(), recyclerViewClickListener)
         }
     }

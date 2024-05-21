@@ -12,19 +12,19 @@ fun convertJsonToDirectionArray(jsonString: String): Array<Direction> {
     val jsonObject = Gson().fromJson(jsonString, JsonObject::class.java)
     val jsonArray = jsonObject.getAsJsonArray("directions")
     val directions = mutableListOf<Direction>()
-    println(jsonArray)
-
-    jsonArray.forEach { element ->
+    Log.d("jsonArray", jsonArray.isEmpty.toString())
+    if(!jsonArray.isEmpty)
+        jsonArray.forEach { element ->
         val directionObjectJSON = element.asJsonObject
         val line = directionObjectJSON["line"].asString
-        val show_name = directionObjectJSON["show_name"].asBoolean
+        val showName = directionObjectJSON["show_name"].asBoolean
         val direction = directionObjectJSON["direction"].asString
         val active = directionObjectJSON["active"].asBoolean
 
-        directions.add(Direction(line, show_name, direction, active))
+        directions.add(Direction(line, showName, direction, active))
     }
 
-    Log.d("result", directions.toTypedArray()[0].toString())
+    Log.d("result", directions.toTypedArray().toString())
 
     return directions.toTypedArray()
 }

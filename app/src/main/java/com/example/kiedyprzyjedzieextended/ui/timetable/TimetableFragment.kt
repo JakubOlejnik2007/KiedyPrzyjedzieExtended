@@ -72,6 +72,17 @@ class TimetableFragment : Fragment() {
                 override fun onClick(view: View, position: Int) {
                 }
             }
+            Log.d("resArray", resArray.toList().toString())
+            if(resArray.isEmpty()) {
+                binding.directionsList.visibility = View.INVISIBLE
+                binding.noDirectionsContainer.visibility = View.VISIBLE
+                binding.controlsTimetable.visibility = View.INVISIBLE
+            } else {
+                binding.directionsList.visibility = View.VISIBLE
+                binding.noDirectionsContainer.visibility = View.INVISIBLE
+                binding.controlsTimetable.visibility = View.VISIBLE
+            }
+            binding.date.text = formatDate(date)
             binding.directionsList.layoutManager = LinearLayoutManager(context)
             binding.directionsList.adapter = DirectionsAdapter(resArray.toList(), recyclerViewClickListener)
         }
