@@ -3,22 +3,26 @@ package com.example.kiedyprzyjedzieextended.ui.map
 import android.annotation.SuppressLint
 import com.example.kiedyprzyjedzieextended.R
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.kiedyprzyjedzieextended.BusStopActivity
 import com.example.kiedyprzyjedzieextended.databinding.FragmentMapBinding
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToStopArray
 import com.example.kiedyprzyjedzieextended.helpers.fetchStopsJSONData
 import com.example.kiedyprzyjedzieextended.types.Stop
+import com.google.gson.Gson
 import org.osmdroid.config.Configuration
 import org.osmdroid.library.BuildConfig
 import org.osmdroid.views.MapView
@@ -76,12 +80,12 @@ class MapFragment : Fragment() {
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.title = stop.stopName
             marker.icon = coloredDrawable
-            marker.infoWindow = CustomInfoWindow(map)
+            marker.infoWindow = CustomInfoWindow(map, requireContext(), stop)
             map.overlays.add(marker)
-            val customInfoWindow = CustomInfoWindow(map)
+            val customInfoWindow = CustomInfoWindow(map, requireContext(), stop)
             marker.infoWindow = customInfoWindow
 
-            marker.setOnMarkerClickListener { m, _ ->
+            marker.setOnMarkerClickListener { _, _ ->
                 if (currentInfoWindow != null) {
                     currentInfoWindow!!.close()
                 }
@@ -89,6 +93,7 @@ class MapFragment : Fragment() {
                 marker.showInfoWindow()
                 true
             }
+
             marker.infoWindow = customInfoWindow
         }
         map.invalidate()
@@ -113,19 +118,23 @@ class MapFragment : Fragment() {
     }
 }
 
-class CustomInfoWindow(mapView: MapView) : InfoWindow(R.layout.custom_info, mapView) {
+class CustomInfoWindow(mapView: MapView, val context: Context, val stop: Stop) : InfoWindow(R.layout.custom_info, mapView) {
 
     override fun onOpen(item: Any?) {
         val marker = item as Marker
         val titleView = mView.findViewById<TextView>(R.id.title)
-        val descriptionView = mView.findViewById<TextView>(R.id.description)
+
+        mView.setOnClickListener { view -> run {
+            val intent = Intent(context, BusStopActivity::class.java)
+            val json = Gson().toJson(stop)
+            intent.putExtra("stopJSON", json)
+            context.startActivity(intent)
+        } }
 
         titleView.text = marker.title
-        descriptionView.text = marker.snippet
 
     }
 
     override fun onClose() {
-        // Możesz dodać kod, który powinien być wykonany, gdy chmurka jest zamykana
     }
 }
