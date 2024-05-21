@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_width="40dp"
             android:layout_margin="5dp"
-            android:text="L"
+            android:text="◀"
             android:backgroundTint="@color/electromagnetic"
             />
         <TextView
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_width="40dp"
             android:layout_margin="5dp"
-            android:text="R"
+            android:text="▶"
             android:backgroundTint="@color/electromagnetic"
             />
     </LinearLayout>

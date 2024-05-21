@@ -33,7 +33,7 @@ class DirectionsAdapter(private var dataSet: List<Direction>, private val clickL
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val direction = dataSet[position]
 
-        holder.linearLayout.background.alpha = 64
+        if(!direction.active) holder.linearLayout.background.alpha = 64
 
         holder.lineNameTextView.text = direction.line
         holder.directionNameTextView.text = direction.direction
