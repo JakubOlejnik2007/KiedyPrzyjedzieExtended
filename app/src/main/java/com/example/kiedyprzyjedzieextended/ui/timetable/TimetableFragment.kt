@@ -18,7 +18,9 @@ import com.example.kiedyprzyjedzieextended.BusStopActivity
 import com.example.kiedyprzyjedzieextended.adapters.DirectionsAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentTimetableBinding
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDirectionArray
+import com.example.kiedyprzyjedzieextended.helpers.convertJsonToTimetableDeparturesObject
 import com.example.kiedyprzyjedzieextended.helpers.fetchDirectionsJSONData
+import com.example.kiedyprzyjedzieextended.helpers.fetchTimetableDeparturesJSONData
 import com.example.kiedyprzyjedzieextended.interfaces.RecyclerClickListener
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -70,6 +72,16 @@ class TimetableFragment : Fragment() {
             val resArray = convertJsonToDirectionArray(result.toString())
             val recyclerViewClickListener = object : RecyclerClickListener {
                 override fun onClick(view: View, position: Int) {
+                    val scheduleData = fetchTimetableDeparturesJSONData(activity.stop.stopId, resArray[position].line, formatDate(date))
+                    scheduleData.observe(viewLifecycleOwner) { result ->
+                        val resObject = convertJsonToTimetableDeparturesObject(result.toString())
+                        if(resObject.empty != null && resObject.empty) {
+                            binding.directionsList.visibility = View.INVISIBLE
+                            binding.noDirectionsContainer.visibility = View.VISIBLE
+                            binding.controlsTimetable.visibility = View.INVISIBLE
+                        }
+                        Log.d("resObject", resObject.toString())
+                    }
                 }
             }
             Log.d("resArray", resArray.toList().toString())

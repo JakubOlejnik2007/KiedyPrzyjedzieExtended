@@ -2,11 +2,18 @@ package com.example.kiedyprzyjedzieextended
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDeparturesObject
+import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
+import com.example.kiedyprzyjedzieextended.types.Departure
 
 class HelloWorldWidget : AppWidgetProvider() {
 
@@ -32,15 +39,31 @@ class HelloWorldWidget : AppWidgetProvider() {
         }
     }
 }
-
+interface DepartureDataListener {
+    fun onDepartureDataChanged(departures: List<Departure>)
+}
 class MyWidgetService : RemoteViewsService() {
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        return MyRemoteViewsFactory(applicationContext, intent)
+        val factory = MyRemoteViewsFactory(applicationContext, intent)
+        fetchDeparturesJSONData("12").observeForever { jsonString ->
+            val departures = convertJsonToDeparturesObject(jsonString).rows.toList()
+            factory.onDepartureDataChanged(departures)
+        }
+        return factory
     }
 }
 
-class MyRemoteViewsFactory(private val context: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory {
-    private val data = listOf("R5", "R5", "R5", "R4", "R8")
+class MyRemoteViewsFactory(private val context: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory, DepartureDataListener {
+    private var departures: List<Departure> = emptyList()
+
+    override fun onDepartureDataChanged(departures: List<Departure>) {
+        this.departures = departures
+        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(
+            AppWidgetManager.getInstance(context).getAppWidgetIds(
+                ComponentName(context, HelloWorldWidget::class.java)
+            ), R.id.widget_list_view
+        )
+    }
 
     override fun onCreate() {}
 
@@ -48,11 +71,12 @@ class MyRemoteViewsFactory(private val context: Context, intent: Intent) : Remot
 
     override fun onDestroy() {}
 
-    override fun getCount(): Int = data.size
+    override fun getCount(): Int = departures.size
 
     override fun getViewAt(position: Int): RemoteViews {
+        val departure = departures[position]
         val views = RemoteViews(context.packageName, R.layout.widget_list_item).apply {
-            setTextViewText(R.id.text_view, data[position])
+            setTextViewText(R.id.text_view, departure.line_name)
         }
         return views
     }

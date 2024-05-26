@@ -70,7 +70,8 @@ fun fetchDeparturesJSONData(stopId: String = "266339:309579"): LiveData<String> 
 
     CoroutineScope(Dispatchers.IO).launch {
         try {
-            val response = getJsonFromUrl("https://radzymin.kiedyprzyjedzie.pl/api/departures/$stopId")
+            //val response = getJsonFromUrl("https://radzymin.kiedyprzyjedzie.pl/api/departures/$stopId")
+            val response = getJsonFromUrl("http://192.168.18.102/")
             result.postValue(response)
         } catch (e: Exception) {
             result.postValue("Error: ${e.message}")
