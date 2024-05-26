@@ -72,7 +72,7 @@ class MapFragment : Fragment() {
     @SuppressLint("UseCompatLoadingForDrawables")
     fun addMarkersToMap(stops: List<Stop>) {
         val drawable = resources.getDrawable(R.drawable.bus_stop_icon2, null)
-        val coloredDrawable = setColorFilter(drawable, resources.getColor(R.color.mazarine_blue)) // Możesz zmienić Color.RED na dowolny kolor
+        val coloredDrawable = setColorFilter(drawable, resources.getColor(R.color.mazarine_blue))
 
         for (stop in stops) {
             val marker = Marker(map)
