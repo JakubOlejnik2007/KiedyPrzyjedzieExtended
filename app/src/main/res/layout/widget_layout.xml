@@ -60,32 +60,6 @@
                 android:textSize="24sp"
                 android:textColor="@color/white"/>
         </LinearLayout></LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/pico_void"
-        android:layout_margin="5dp">
-        <LinearLayout
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="5dp"
-                android:src="@drawable/big_bus"
-                app:tint="@color/white">
-
-            </ImageView>
-            <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:text="R5"
-                android:textSize="24sp"
-                android:textColor="@color/white"/>
-        </LinearLayout></LinearLayout>
 
 
 </LinearLayout>
