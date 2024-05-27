@@ -43,12 +43,22 @@ interface DepartureDataListener {
     fun onDepartureDataChanged(departures: List<Departure>)
 }
 class MyWidgetService : RemoteViewsService() {
+    var departuresAll: Array<Departure> = emptyArray()
+    val stopsToFetch: List<String> = listOf("383722:82864", "266339:309579")
     override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
         val factory = MyRemoteViewsFactory(applicationContext, intent)
-        fetchDeparturesJSONData("12").observeForever { jsonString ->
-            val departures = convertJsonToDeparturesObject(jsonString).rows.toList()
-            factory.onDepartureDataChanged(departures)
-        }
+
+        stopsToFetch.forEach { stopId -> run {
+            fetchDeparturesJSONData(stopId).observeForever { jsonString ->
+                val departuresObject = convertJsonToDeparturesObject(jsonString)
+                val departures = departuresObject.rows
+                departuresAll+=Departure(at_stop = false, line_name = departuresObject.station_name, canceled = false, deviation_id = null, direction = "", direction_id = 1, is_estimated = false, platform = "123", show_line_name = true, static_time = null, time = "0", time_diff = 0, trip_execution_id = "1", trip_id = 1, trip_index = 1, vehicle_attributes = emptyArray(), vehicle_type = 2137)
+                departuresAll+=departures
+                factory.onDepartureDataChanged(departuresAll.toList())
+            }
+        }}
+
+
         return factory
     }
 }
