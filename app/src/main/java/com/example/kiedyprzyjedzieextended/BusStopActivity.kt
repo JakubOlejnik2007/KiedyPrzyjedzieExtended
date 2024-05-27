@@ -29,13 +29,17 @@ class BusStopActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBusStopBinding
     private lateinit var adapter: FragmentPageAdapter
     lateinit var stop: Stop
-    var favouriteStops: Array<String> = emptyArray()
+    var favouriteStops: MutableList<String> = emptyList<String>().toMutableList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val sharedData = intent.getSerializableExtra("stopJSON") as String
 
+
+
         stop = Gson().fromJson(sharedData, Stop::class.java)
+
+        favouriteStops = readFavouriteStopIds(this, "FavouriteStops", "FavouriteStops")
 
         binding = ActivityBusStopBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -60,6 +64,8 @@ class BusStopActivity : AppCompatActivity() {
                 val drawable = ContextCompat.getDrawable(this, R.drawable.star_sharp_svgrepo_com)
                 drawable?.setTint(ContextCompat.getColor(this, R.color.lynx_white))
                 addFavourite.setImageDrawable(drawable)
+                favouriteStops.remove(stop.stopId)
+                writeFavouriteStopIds(this, "FavouriteStops", "FavouriteStops")
             } else {
                 val drawable = ContextCompat.getDrawable(this, R.drawable.baseline_star_24)
                 drawable?.setTint(ContextCompat.getColor(this, R.color.rise_n_shine))
@@ -67,6 +73,7 @@ class BusStopActivity : AppCompatActivity() {
                 favouriteStops += stop.stopId
                 writeFavouriteStopIds(this, "FavouriteStops", "FavouriteStops")
             }
+            Log.d("FavouriteStops", favouriteStops.toString())
 
         }
         adapter = FragmentPageAdapter(supportFragmentManager, lifecycle)
@@ -103,36 +110,36 @@ class BusStopActivity : AppCompatActivity() {
 
         binding.close.setOnClickListener { finish() }
 
-        this.favouriteStops =
-            readFavouriteStopIds(this, "FavouriteStops", "FavouriteStops").toTypedArray()
+
     }
 
     fun readFavouriteStopIds(
         context: Context,
         preferencesName: String,
         key: String
-    ): List<String> {
+    ): MutableList<String> {
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
 
         val stopIdsString: String? = sharedPreferences.getString(key, null)
 
         return if (!stopIdsString.isNullOrEmpty()) {
-            stopIdsString.split(",").map { it.trim() }
+            stopIdsString.split(",").map { it.trim() }.toMutableList()
         } else {
-            emptyList()
+            emptyList<String>().toMutableList()
         }
     }
 
-    @SuppressLint("CommitPrefEdits")
     fun writeFavouriteStopIds(context: Context, preferencesName: String, key: String) {
         val stopIdsString = this.favouriteStops.joinToString(",")
-
+        Log.d("FavouriteStops", stopIdsString)
         val sharedPreferences: SharedPreferences =
             context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString(key, stopIdsString)
 
-        with(sharedPreferences.edit()) {
-            putString(key, stopIdsString)
-        }
+        editor.apply()
+
+        favouriteStops = readFavouriteStopIds(context, "FavouriteStops", "FavouriteStops")
     }
 }
