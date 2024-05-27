@@ -14,6 +14,12 @@ import androidx.lifecycle.Observer
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDeparturesObject
 import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
 import com.example.kiedyprzyjedzieextended.types.Departure
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
+import androidx.work.Worker
+import androidx.work.WorkerParameters
+import java.util.concurrent.TimeUnit
 
 class HelloWorldWidget : AppWidgetProvider() {
 
@@ -40,7 +46,13 @@ class HelloWorldWidget : AppWidgetProvider() {
     }
 }
 
-
+// Tutaj możemy dodać klasę WidgetRefreshWorker
+class WidgetRefreshWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+    override fun doWork(): Result {
+        // Kod do odświeżania danych
+        return Result.success()
+    }
+}
 
 class MyWidgetService : RemoteViewsService() {
     var departuresAll: Array<Departure> = emptyArray()
@@ -49,7 +61,6 @@ class MyWidgetService : RemoteViewsService() {
         val factory = MyRemoteViewsFactory(applicationContext, intent)
 
         val favouriteStops = readFavouriteStopIds(applicationContext, "FavouriteStops", "FavouriteStops")
-
 
         favouriteStops.forEach { stopId ->
             fetchDeparturesJSONData(stopId).observeForever { jsonString ->
@@ -106,7 +117,7 @@ class MyRemoteViewsFactory(private val context: Context, intent: Intent) : Remot
     override fun getViewAt(position: Int): RemoteViews {
         val departure = departures[position]
         val views = RemoteViews(context.packageName, R.layout.widget_list_item).apply {
-            setTextViewText(R.id.text_view, departure.line_name)
+            setTextViewText(R.id.text_view, if(departure.vehicle_type == 2137) departure.line_name else "${departure.line_name}: ${departure.time}")
         }
         return views
     }
@@ -132,4 +143,19 @@ fun readFavouriteStopIds(
     } else {
         emptyList<String>().toMutableList()
     }
+}
+
+// Tutaj możemy dodać kod do uruchamiania Worker-a co minutę
+fun startPeriodicRefresh(context: Context) {
+    val refreshWorkRequest = PeriodicWorkRequest.Builder(
+        WidgetRefreshWorker::class.java,
+        15,
+        TimeUnit.MINUTES
+    ).build()
+
+    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        "WidgetRefreshWork",
+        ExistingPeriodicWorkPolicy.REPLACE,
+        refreshWorkRequest
+    )
 }
