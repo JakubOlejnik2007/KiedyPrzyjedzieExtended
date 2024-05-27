@@ -1,161 +1,64 @@
 package com.example.kiedyprzyjedzieextended
 
-import DepartureDataListener
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.widget.RemoteViews
-import android.widget.RemoteViewsService
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
-import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDeparturesObject
-import com.example.kiedyprzyjedzieextended.helpers.fetchDeparturesJSONData
-import com.example.kiedyprzyjedzieextended.types.Departure
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
-import java.util.concurrent.TimeUnit
+import java.util.*
 
 class HelloWorldWidget : AppWidgetProvider() {
 
+    private var departureList = arrayOf("R5", "R7")
+
+    private lateinit var context: Context
+    private lateinit var appWidgetManager: AppWidgetManager
+    private lateinit var handler: Handler
+    private lateinit var componentName: ComponentName
+    private var appWidgetIds: IntArray = IntArray(0) // Store appWidgetIds
+
+    private val runnable = object : Runnable {
+        override fun run() {
+            departureList += "${Random().nextInt(100)}"
+            DataHolder.departureList = departureList.toList()
+            Log.d("widget-test", departureList.toList().toString())
+            updateWidget()
+            handler.postDelayed(this, 10000)
+        }
+    }
+
+    private fun updateWidget() {
+        Log.d("widget-test", "Updating widget with departures: ${DataHolder.departureList}")
+        val views = RemoteViews(context.packageName, R.layout.widget_layout)
+
+        val intent = Intent(context, WidgetListService::class.java)
+
+        for (widgetId in appWidgetIds) {
+            views.setRemoteAdapter(R.id.widget_list_view, intent)
+            appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.widget_list_view)
+            appWidgetManager.updateAppWidget(widgetId, views)
+        }
+    }
+
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
-        }
+        Log.d("widget-test", "onUpdate called with appWidgetIds: ${appWidgetIds.joinToString()}")
+        this.context = context
+        this.appWidgetManager = appWidgetManager
+        this.appWidgetIds = appWidgetIds // Store appWidgetIds
+        componentName = ComponentName(context, HelloWorldWidget::class.java)
+
+        handler = Handler(Looper.getMainLooper())
+        handler.post(runnable)
     }
 
-    companion object {
-        internal fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-            val intent = Intent(context, MyWidgetService::class.java).apply {
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-                data = Uri.parse(toUri(Intent.URI_INTENT_SCHEME))
-            }
-
-            val views = RemoteViews(context.packageName, R.layout.widget_layout).apply {
-                setRemoteAdapter(R.id.widget_list_view, intent)
-                setEmptyView(R.id.widget_list_view, android.R.id.empty)
-            }
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
-        }
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        // Stop updating widget when disabled
+        Log.d("widget-test", "onDisabled called")
+        handler.removeCallbacks(runnable)
     }
-}
-
-// Tutaj możemy dodać klasę WidgetRefreshWorker
-class WidgetRefreshWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
-    override fun doWork(): Result {
-        // Kod do odświeżania danych
-        return Result.success()
-    }
-}
-
-class MyWidgetService : RemoteViewsService() {
-    var departuresAll: Array<Departure> = emptyArray()
-
-    override fun onGetViewFactory(intent: Intent): RemoteViewsFactory {
-        val factory = MyRemoteViewsFactory(applicationContext, intent)
-
-        val favouriteStops = readFavouriteStopIds(applicationContext, "FavouriteStops", "FavouriteStops")
-
-        favouriteStops.forEach { stopId ->
-            fetchDeparturesJSONData(stopId).observeForever { jsonString ->
-                val departuresObject = convertJsonToDeparturesObject(jsonString)
-                val departures = departuresObject.rows
-                departuresAll += Departure(
-                    at_stop = false,
-                    line_name = departuresObject.station_name,
-                    canceled = false,
-                    deviation_id = null,
-                    direction = "",
-                    direction_id = 1,
-                    is_estimated = false,
-                    platform = "123",
-                    show_line_name = true,
-                    static_time = null,
-                    time = "0",
-                    time_diff = 0,
-                    trip_execution_id = "1",
-                    trip_id = 1,
-                    trip_index = 1,
-                    vehicle_attributes = emptyArray(),
-                    vehicle_type = 2137
-                )
-                departuresAll += departures
-                factory.onDepartureDataChanged(departuresAll.toList())
-            }
-        }
-
-        return factory
-    }
-}
-
-class MyRemoteViewsFactory(private val context: Context, intent: Intent) : RemoteViewsService.RemoteViewsFactory, DepartureDataListener {
-    private var departures: List<Departure> = emptyList()
-
-    override fun onDepartureDataChanged(departures: List<Departure>) {
-        this.departures = departures
-        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(
-            AppWidgetManager.getInstance(context).getAppWidgetIds(
-                ComponentName(context, HelloWorldWidget::class.java)
-            ), R.id.widget_list_view
-        )
-    }
-
-    override fun onCreate() {}
-
-    override fun onDataSetChanged() {}
-
-    override fun onDestroy() {}
-
-    override fun getCount(): Int = departures.size
-
-    override fun getViewAt(position: Int): RemoteViews {
-        val departure = departures[position]
-        val views = RemoteViews(context.packageName, R.layout.widget_list_item).apply {
-            setTextViewText(R.id.text_view, if(departure.vehicle_type == 2137) departure.line_name else "${departure.line_name}: ${departure.time}")
-        }
-        return views
-    }
-
-    override fun getLoadingView(): RemoteViews? = null
-
-    override fun getViewTypeCount(): Int = 1
-
-    override fun getItemId(position: Int): Long = position.toLong()
-
-    override fun hasStableIds(): Boolean = true
-}
-
-fun readFavouriteStopIds(
-    context: Context,
-    preferencesName: String,
-    key: String
-): MutableList<String> {
-    val sharedPreferences = context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
-    val stopIdsString: String? = sharedPreferences.getString(key, null)
-    return if (!stopIdsString.isNullOrEmpty()) {
-        stopIdsString.split(",").map { it.trim() }.toMutableList()
-    } else {
-        emptyList<String>().toMutableList()
-    }
-}
-
-// Tutaj możemy dodać kod do uruchamiania Worker-a co minutę
-fun startPeriodicRefresh(context: Context) {
-    val refreshWorkRequest = PeriodicWorkRequest.Builder(
-        WidgetRefreshWorker::class.java,
-        15,
-        TimeUnit.MINUTES
-    ).build()
-
-    WorkManager.getInstance(context).enqueueUniquePeriodicWork(
-        "WidgetRefreshWork",
-        ExistingPeriodicWorkPolicy.REPLACE,
-        refreshWorkRequest
-    )
 }

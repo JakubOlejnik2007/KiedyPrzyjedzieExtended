@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        startPeriodicRefresh(applicationContext)
+        //startPeriodicRefresh(applicationContext)
 
         val navView: BottomNavigationView = binding.navView
 
