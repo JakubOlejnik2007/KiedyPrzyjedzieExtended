@@ -1,11 +1,17 @@
 package com.example.kiedyprzyjedzieextended
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.ImageView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -23,6 +29,7 @@ class BusStopActivity : AppCompatActivity() {
     private lateinit var binding: ActivityBusStopBinding
     private lateinit var adapter: FragmentPageAdapter
     lateinit var stop: Stop
+    var favouriteStops: Array<String> = emptyArray()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -36,7 +43,32 @@ class BusStopActivity : AppCompatActivity() {
         binding.stopName.text = stop.stopName
         binding.stopNumber.text = stop.stopNumber.toString()
 
+        val addFavourite: ImageView = binding.addFavourite
+        if(stop.stopId !in favouriteStops) {
+            val drawable = ContextCompat.getDrawable(this, R.drawable.star_sharp_svgrepo_com)
+            drawable?.setTint(ContextCompat.getColor(this, R.color.lynx_white))
+            addFavourite.setImageDrawable(drawable)
+        } else {
+            val drawable = ContextCompat.getDrawable(this, R.drawable.baseline_star_24)
+            drawable?.setTint(ContextCompat.getColor(this, R.color.rise_n_shine))
+            addFavourite.setImageDrawable(drawable)
+        }
 
+
+        addFavourite.setOnClickListener { view ->
+            if(stop.stopId in favouriteStops) {
+                val drawable = ContextCompat.getDrawable(this, R.drawable.star_sharp_svgrepo_com)
+                drawable?.setTint(ContextCompat.getColor(this, R.color.lynx_white))
+                addFavourite.setImageDrawable(drawable)
+            } else {
+                val drawable = ContextCompat.getDrawable(this, R.drawable.baseline_star_24)
+                drawable?.setTint(ContextCompat.getColor(this, R.color.rise_n_shine))
+                addFavourite.setImageDrawable(drawable)
+                favouriteStops += stop.stopId
+                writeFavouriteStopIds(this, "FavouriteStops", "FavouriteStops")
+            }
+
+        }
         adapter = FragmentPageAdapter(supportFragmentManager, lifecycle)
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Odjazdy".uppercase()))
@@ -61,13 +93,46 @@ class BusStopActivity : AppCompatActivity() {
 
         })
 
-        binding.viewpager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.viewpager2.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 binding.tabLayout.selectTab(binding.tabLayout.getTabAt(position))
             }
         })
 
-        binding.close.setOnClickListener {finish()}
+        binding.close.setOnClickListener { finish() }
+
+        this.favouriteStops =
+            readFavouriteStopIds(this, "FavouriteStops", "FavouriteStops").toTypedArray()
+    }
+
+    fun readFavouriteStopIds(
+        context: Context,
+        preferencesName: String,
+        key: String
+    ): List<String> {
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+
+        val stopIdsString: String? = sharedPreferences.getString(key, null)
+
+        return if (!stopIdsString.isNullOrEmpty()) {
+            stopIdsString.split(",").map { it.trim() }
+        } else {
+            emptyList()
+        }
+    }
+
+    @SuppressLint("CommitPrefEdits")
+    fun writeFavouriteStopIds(context: Context, preferencesName: String, key: String) {
+        val stopIdsString = this.favouriteStops.joinToString(",")
+
+        val sharedPreferences: SharedPreferences =
+            context.getSharedPreferences(preferencesName, Context.MODE_PRIVATE)
+
+        with(sharedPreferences.edit()) {
+            putString(key, stopIdsString)
+        }
     }
 }
