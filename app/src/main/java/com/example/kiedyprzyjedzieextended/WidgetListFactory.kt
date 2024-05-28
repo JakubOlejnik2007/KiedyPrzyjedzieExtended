@@ -29,8 +29,9 @@ class WidgetListFactory(private val context: Context) : RemoteViewsService.Remot
 
     override fun getViewAt(position: Int): RemoteViews {
         Log.d("test-widget2", "getViewAt called for position: $position")
-        val views = RemoteViews(context.packageName, android.R.layout.simple_list_item_1)
-        views.setTextViewText(android.R.id.text1, DataHolder.departureList[position])
+        val views = RemoteViews(context.packageName, R.layout.widget_list_item)
+        val elem = DataHolder.departureList[position]
+        views.setTextViewText(R.id.listelem, if(elem.vehicle_type == 2137) elem.line_name else "${elem.line_name}: ${elem.time}")
         return views
     }
 
