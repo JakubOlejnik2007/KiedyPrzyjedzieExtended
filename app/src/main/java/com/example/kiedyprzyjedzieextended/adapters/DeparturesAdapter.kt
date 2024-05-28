@@ -42,15 +42,43 @@ class DeparturesAdapter(private var dataSet: List<Departure>, private val clickL
         holder.lineNameTextView.text = departure.line_name
         holder.direction.text = departure.direction
         holder.arrivalTimeTextView.text = departure.time ?: ">>>"
-        if(departure.time == null || departure.time == "< 1 min" || (!departure.time.contains(":") && departure.time.split(" ")[0].toInt() in 0..5)) holder.arrivalTimeTextView.setTextColor(0xFFFF0000.toInt())
+        if(departure.time == null || departure.time == "< 1 min" || (!departure.time.contains(":") && departure.time.split(" ")[0].toInt() in 0..5)) {
+            holder.arrivalTimeTextView.setTextColor(0xFFFF0000.toInt())
+        }
         holder.busIconImageView.setImageResource(if(departure.vehicle_type == 3) R.drawable.small_bus else R.drawable.big_bus)
         holder.busDelayTextView.text = if(!departure.at_stop && departure.time_diff != 0) "${departure.time_diff ?: "0"} min" else ""
-        if(departure.time_diff != null && departure.time_diff > 0) holder.busDelayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.harley_davidson_orange))
+        if(departure.time_diff != null && departure.time_diff > 0) {
+            holder.busDelayTextView.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.harley_davidson_orange))
+        }
+
+        holder.busAttributesLinearLayout.removeAllViews()
+
+        departure.vehicle_attributes.forEach {
+            val iconResId = when (it) {
+                "ac" -> R.drawable.ac
+                "low_floor" -> R.drawable.low_floor
+                "bike_transport" -> R.drawable.bike_tranport
+                else -> null
+            }
+            iconResId?.let { resId ->
+                val imageView = ImageView(holder.itemView.context).apply {
+                    setImageResource(resId)
+                    setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.white)) // Set icon color to white
+                    layoutParams = LinearLayout.LayoutParams(
+                        50, 50
+                    ).apply {
+                        setMargins(4, 0, 4, 0) // Optionally set margins
+                    }
+                }
+                holder.busAttributesLinearLayout.addView(imageView)
+            }
+        }
 
         holder.itemView.setOnClickListener {
             clickListener.onClick(it, position)
         }
     }
+
 
     override fun getItemCount(): Int {
         return dataSet.size

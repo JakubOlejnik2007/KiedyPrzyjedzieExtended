@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KiedyPrzyjedzieExtended</string>
+    <string name="app_name">KiedyPrzyjedzie EXTRA</string>
     <string name="title_home">Przystanki</string>
     <string name="title_map">Mapa</string>
     <string name="title_activity_bus_stop">BusStopActivity</string>
