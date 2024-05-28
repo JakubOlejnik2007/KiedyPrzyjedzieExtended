@@ -1,5 +1,6 @@
 package com.example.kiedyprzyjedzieextended.ui.timetable
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kiedyprzyjedzieextended.BusStopActivity
+import com.example.kiedyprzyjedzieextended.TimetableActivity
 import com.example.kiedyprzyjedzieextended.adapters.DirectionsAdapter
 import com.example.kiedyprzyjedzieextended.databinding.FragmentTimetableBinding
 import com.example.kiedyprzyjedzieextended.helpers.convertJsonToDirectionArray
@@ -22,6 +24,7 @@ import com.example.kiedyprzyjedzieextended.helpers.convertJsonToTimetableDepartu
 import com.example.kiedyprzyjedzieextended.helpers.fetchDirectionsJSONData
 import com.example.kiedyprzyjedzieextended.helpers.fetchTimetableDeparturesJSONData
 import com.example.kiedyprzyjedzieextended.interfaces.RecyclerClickListener
+import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -76,19 +79,25 @@ class TimetableFragment : Fragment() {
                     scheduleData.observe(viewLifecycleOwner) { result ->
                         val resObject = convertJsonToTimetableDeparturesObject(result.toString())
                         if(resObject.empty != null && resObject.empty) {
-                            binding.directionsList.visibility = View.INVISIBLE
+                            binding.directionsList.visibility = View.GONE
                             binding.noDirectionsContainer.visibility = View.VISIBLE
-                            binding.controlsTimetable.visibility = View.INVISIBLE
+                            binding.controlsTimetable.visibility = View.GONE
                         }
-                        Log.d("resObject", resObject.toString())
+
+                        val jsonParser = Gson()
+                        val timetableDeparturesString = jsonParser.toJson(resObject)
+
+                        val intent = Intent(requireActivity(), TimetableActivity::class.java)
+                        intent.putExtra("data", timetableDeparturesString)
+                        startActivity(intent)
                     }
                 }
             }
             Log.d("resArray", resArray.toList().toString())
             if(resArray.isEmpty()) {
-                binding.directionsList.visibility = View.INVISIBLE
+                binding.directionsList.visibility = View.GONE
                 binding.noDirectionsContainer.visibility = View.VISIBLE
-                binding.controlsTimetable.visibility = View.INVISIBLE
+                binding.controlsTimetable.visibility = View.GONE
             } else {
                 binding.directionsList.visibility = View.VISIBLE
                 binding.noDirectionsContainer.visibility = View.INVISIBLE

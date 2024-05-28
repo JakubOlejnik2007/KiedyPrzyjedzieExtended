@@ -20,7 +20,7 @@ import com.example.kiedyprzyjedzieextended.interfaces.RecyclerClickListener
 import com.example.kiedyprzyjedzieextended.types.Stop
 import com.google.gson.Gson
 
-class HomeFragment : Fragment() {
+class StopsFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
